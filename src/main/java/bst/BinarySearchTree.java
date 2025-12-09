@@ -44,6 +44,12 @@ public class BinarySearchTree<T extends Comparable<T>> {
     private void preorderRecursive(TreeNode<T> node, List<T> out) {
         // TODO: implement Preorder: Root -> Left -> Right
         // hint: check for null, then visit node, then recurse on left and right
+        if (node == null) return;
+        out.add(node.value);
+        preorderRecursive(node.left, out);
+        preorderRecursive(node.right, out);
+
+
     }
 
     public List<T> inorderRecursive() {
@@ -54,6 +60,10 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     private void inorderRecursive(TreeNode<T> node, List<T> out) {
         // TODO: implement Inorder: Left -> Root -> Right
+        if (node == null) return;
+        inorderRecursive(node.left, out);
+        out.add(node.value);
+        inorderRecursive(node.right, out);
     }
 
     public List<T> postorderRecursive() {
@@ -64,6 +74,10 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     private void postorderRecursive(TreeNode<T> node, List<T> out) {
         // TODO: implement Postorder: Left -> Right -> Root
+        if (node == null) return;
+        postorderRecursive(node.left, out);
+        postorderRecursive(node.right, out);
+        out.add(node.value);
     }
 
     // --------- Level-order (Breadth-First) ----------
@@ -77,6 +91,15 @@ public class BinarySearchTree<T extends Comparable<T>> {
         //      - dequeue node
         //      - add node.value to result
         //      - enqueue children if not null (left then right)
+        if (root == null) return result;
+        Queue<TreeNode<T>> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            TreeNode<T> node = queue.remove();
+            result.add(node.value);
+            if (node.left != null) queue.add(node.left);
+            if (node.right != null) queue.add(node.right);
+        }
         return result;
     }
 
@@ -84,10 +107,11 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     public List<T> getByTraversal(TraversalType type) {
         // TODO: dispatch based on traversal type
-//        return switch (type) {
-//            default ->
-//                throw new IllegalArgumentException("Not implemented yet");
-//        };
-        return new ArrayList<>(); // placeholder
+        return switch (type) {
+            case PREORDER -> preorderRecursive();
+            case INORDER -> inorderRecursive();
+            case POSTORDER -> postorderRecursive();
+            case LEVEL_ORDER -> levelOrder();
+        };
     }
 }
